@@ -1,0 +1,49 @@
+name: Deploy Avatar Server to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Bước 1: Build mã nguồn trên GitHub Actions để test xem code có bị lỗi compile không
+      - name: Setup Java 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        run: mvn -B package -DskipTests
+
+      # Bước 2: Deploy lên VPS bằng SSH
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Clone repo nếu chưa có, hoặc pull nếu đã có
+            if [ ! -d "/home/ubuntu/avatar" ]; then
+              git clone https://github.com/${{ github.repository }}.git /home/ubuntu/avatar
+            fi
+            
+            cd /home/ubuntu/avatar
+            
+            # Cập nhật mã nguồn mới nhất
+            git reset --hard
+            git pull origin main
+            
+            # Đảm bảo run.sh có quyền thực thi
+            chmod +x run.sh
+            
+            # Chạy kịch bản khởi động Docker
+            ./run.sh

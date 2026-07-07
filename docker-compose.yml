@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  db:
+    image: mariadb:10.5
+    container_name: avatar_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: avatar_2x
+    volumes:
+      - db_data:/var/lib/mysql
+      # Tự động nạp dữ liệu từ file sql vào database trong lần khởi chạy đầu tiên
+      - ./database/avatar_2x.sql:/docker-entrypoint-initdb.d/avatar_2x.sql
+    ports:
+      - "3306:3306"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  server:
+    build: .
+    container_name: avatar_server
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "19128:19128"
+    volumes:
+      - ./res:/app/res
+      - ./database:/app/database
+      - ./logs:/app/logs
+      - ./database.properties:/app/database.properties
+      - ./config.properties:/app/config.properties
+
+volumes:
+  db_data:

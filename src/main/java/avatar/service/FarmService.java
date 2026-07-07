@@ -41,7 +41,7 @@ public class FarmService extends Service {
         short idFarmItm = ms.reader().readShort();
         System.out.println("Sell item ID: " + idFarmItm);
         
-        avatar.item.farmItem itemf = PartManager.getInstance().findFarmitemByID(idFarmItm);
+        farmItem itemf = PartManager.getInstance().findFarmitemByID(idFarmItm);
         if (itemf == null) {
             user.getAvatarService().serverDialog("Vật phẩm không tồn tại!");
             return;

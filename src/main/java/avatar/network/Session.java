@@ -453,6 +453,7 @@ public class Session implements ISession {
         String username = ms.reader().readUTF().trim();
         String password = ms.reader().readUTF().trim();
         String version = ms.reader().readUTF().trim();
+        System.out.println("Client dang nhap voi tai khoan: " + username + " - version: " + version);
         this.versionARM = version;
         User us = new User();
         us.setUsername(username);
@@ -460,10 +461,12 @@ public class Session implements ISession {
         us.setSession(this);
         boolean result = us.login();
         if (result) {
+            System.out.println("=> " + username + " dang nhap THANH CONG!");
             this.login = true;
             this.user = us;
             enter();
         } else {
+            System.out.println("=> " + username + " dang nhap THAT BAI (sai pass hoac khong ton tai)!");
             this.login = false;
         }
     }

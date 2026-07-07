@@ -41,14 +41,28 @@ public class FarmService extends Service {
         short idFarmItm = ms.reader().readShort();
         System.out.println("Sell item ID: " + idFarmItm);
         
+        int sellPrice = 0;
+        String name = "";
         farmItem itemf = PartManager.getInstance().findFarmitemByID(idFarmItm);
-        if (itemf == null) {
+        
+        if (itemf != null) {
+            sellPrice = itemf.getSell();
+            name = itemf.getName();
+        } else if (idFarmItm == 214) {
+            sellPrice = 150; 
+            name = "Tinh dầu Hướng Dương";
+        } else if (idFarmItm == 215) {
+            sellPrice = 5;
+            name = "Khế";
+        } else if (idFarmItm == 255) {
+            sellPrice = 15;
+            name = "Thịt cá";
+        } else {
             user.getAvatarService().serverDialog("Vật phẩm không tồn tại!");
             return;
         }
 
         int quantityToSell = 0;
-        int sellPrice = itemf.getSell();
         
         // Find in NongSan
         NongSan nsToRemove = null;
@@ -89,7 +103,7 @@ public class FarmService extends Service {
         user.updateXu(totalXu);
         
         // Notify client
-        user.getAvatarService().serverDialog("Bạn đã bán " + quantityToSell + " " + itemf.getName() + " và nhận được " + totalXu + " xu!");
+        user.getAvatarService().serverDialog("Bạn đã bán " + quantityToSell + " " + name + " và nhận được " + totalXu + " xu!");
         user.getAvatarService().updateMoney(0);
         
         // Update inventory UI

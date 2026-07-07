@@ -37,24 +37,63 @@ public class FarmService extends Service {
     }
 
 
-    public void sellFarmitm(User user,Message ms) throws IOException {
+    public void sellFarmitm(User user, Message ms) throws IOException {
         short idFarmItm = ms.reader().readShort();
         System.out.println("Sell item ID: " + idFarmItm);
-        try {
-            int available = ms.reader().available();
-            if (available > 0) {
-                byte[] remaining = new byte[available];
-                ms.reader().readFully(remaining);
-                StringBuilder sb = new StringBuilder();
-                for (byte b : remaining) {
-                    sb.append(String.format("%02X ", b));
-                }
-                System.out.println("Remaining bytes: " + sb.toString());
-            } else {
-                System.out.println("No remaining bytes. Probably sells all or sells 1.");
+        
+        avatar.item.farmItem itemf = PartManager.getInstance().findFarmitemByID(idFarmItm);
+        if (itemf == null) {
+            user.getAvatarService().serverDialog("Vật phẩm không tồn tại!");
+            return;
+        }
+
+        int quantityToSell = 0;
+        int sellPrice = itemf.getSell();
+        
+        // Find in NongSan
+        NongSan nsToRemove = null;
+        for (NongSan ns : user.NongSan) {
+            if (ns.getId() == idFarmItm) {
+                quantityToSell = ns.getSoluong();
+                nsToRemove = ns;
+                break;
             }
-        } catch (Exception e) {}
-        user.getAvatarService().serverDialog("Da ghi log ban do, xem tren VPS!");
+        }
+        
+        // Find in NongSanDacBiet
+        NongSanDacBiet nsdbToRemove = null;
+        if (quantityToSell == 0) {
+            for (NongSanDacBiet nsdb : user.NongSanDacBiet) {
+                if (nsdb.getId() == idFarmItm) {
+                    quantityToSell = nsdb.getSoluong();
+                    nsdbToRemove = nsdb;
+                    break;
+                }
+            }
+        }
+        
+        if (quantityToSell <= 0) {
+            user.getAvatarService().serverDialog("Bạn không có vật phẩm này để bán!");
+            return;
+        }
+        
+        // Deduct items
+        if (nsToRemove != null) {
+            user.NongSan.remove(nsToRemove);
+        } else if (nsdbToRemove != null) {
+            user.NongSanDacBiet.remove(nsdbToRemove);
+        }
+        
+        // Add money
+        long totalXu = (long) quantityToSell * sellPrice;
+        user.updateXu(totalXu);
+        
+        // Notify client
+        user.getAvatarService().serverDialog("Bạn đã bán " + quantityToSell + " " + itemf.getName() + " và nhận được " + totalXu + " xu!");
+        user.getAvatarService().updateMoney(0);
+        
+        // Update inventory UI
+        getInventory(null);
     }
 
 

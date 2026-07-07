@@ -115,22 +115,28 @@ public class FarmMsgHandler extends MessageHandler {
                     this.service.sellFarmitm(this.client.user, mss);
                     break;
                 }
-                case Cmd.UPDATE_FARM_CATTLE:
-                case Cmd.UPDATE_FARM_FISH:
-                case Cmd.STEAL:
-                case Cmd.STEAL_INFO:
+                case Cmd.UPDATE_FARM_CATTLE: {
+                    this.service.serverDialog("Mở rộng nông trại đang xây dựng vui lòng quay lại sau");
+                    break;
+                }
+                case Cmd.UPDATE_FARM_FISH: {
+                    this.service.serverDialog("Mở rộng nuôi cá đang xây dựng");
+                    break;
+                }
+                case Cmd.STEAL: {
+                    this.service.doSteal(this.client.user, mss);
+                    break;
+                }
+                case Cmd.STEAL_INFO: {
+                    this.service.serverDialog("Chức năng đang xây dựng");
+                    break;
+                }
                 case Cmd.STEAL_STORE: {
-                    System.out.println("====== [PACKET SNIFFER] FARM ACTION DETECTED ======");
-                    System.out.println("Command ID: " + mss.getCommand());
-                    byte[] data = mss.reader().available() > 0 ? new byte[mss.reader().available()] : new byte[0];
-                    mss.reader().readFully(data);
-                    System.out.print("Payload Bytes: ");
-                    for (byte b : data) {
-                        System.out.print(b + " ");
-                    }
-                    System.out.println();
-                    System.out.println("====================================================");
-                    this.service.serverDialog("Đã gửi tín hiệu để Admin phân tích!");
+                    this.service.serverDialog("Chức năng đang xây dựng");
+                    break;
+                }
+                case Cmd.USING_ITEM: {
+                    this.service.usingItem(this.client.user, mss);
                     break;
                 }
                 case Cmd.COOKING: {
@@ -143,16 +149,6 @@ public class FarmMsgHandler extends MessageHandler {
                     break;
                 }
                 default:
-                    System.out.println("====== [PACKET SNIFFER] UNKNOWN FARM COMMAND ======");
-                    System.out.println("Command ID: " + mss.getCommand());
-                    byte[] defData = mss.reader().available() > 0 ? new byte[mss.reader().available()] : new byte[0];
-                    mss.reader().readFully(defData);
-                    System.out.print("Payload Bytes: ");
-                    for (byte b : defData) {
-                        System.out.print(b + " ");
-                    }
-                    System.out.println();
-                    System.out.println("====================================================");
                     super.onMessage(mss);
                     break;
             }

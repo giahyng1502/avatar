@@ -743,7 +743,14 @@ public class User {
                         boolean isHarvestable = (Boolean) obj.get("isHarvestable");
 
                         String plantedTimeStr = (String) obj.get("plantedTime");
-                        LocalDateTime plantedTime = LocalDateTime.parse(plantedTimeStr, formatter);
+                        LocalDateTime plantedTime = null;
+                        if (plantedTimeStr != null && !"not_planted".equals(plantedTimeStr)) {
+                            try {
+                                plantedTime = LocalDateTime.parse(plantedTimeStr, formatter);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
 
                         LandItem landItem = new LandItem(growthTime, type,suckhoe, resourceCount, isWatered, isFertilized, isHarvestable, plantedTime);
                         landItems.add(landItem);

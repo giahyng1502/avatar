@@ -39,8 +39,22 @@ public class FarmService extends Service {
 
     public void sellFarmitm(User user,Message ms) throws IOException {
         short idFarmItm = ms.reader().readShort();
-        System.out.println(idFarmItm);
-        user.getAvatarService().serverDialog("id");
+        System.out.println("Sell item ID: " + idFarmItm);
+        try {
+            int available = ms.reader().available();
+            if (available > 0) {
+                byte[] remaining = new byte[available];
+                ms.reader().readFully(remaining);
+                StringBuilder sb = new StringBuilder();
+                for (byte b : remaining) {
+                    sb.append(String.format("%02X ", b));
+                }
+                System.out.println("Remaining bytes: " + sb.toString());
+            } else {
+                System.out.println("No remaining bytes. Probably sells all or sells 1.");
+            }
+        } catch (Exception e) {}
+        user.getAvatarService().serverDialog("Da ghi log ban do, xem tren VPS!");
     }
 
 

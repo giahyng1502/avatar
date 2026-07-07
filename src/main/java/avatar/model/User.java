@@ -657,7 +657,7 @@ public class User {
             JSONObject phanBonObject = new JSONObject();
             phanBonObject.put("id", phanBon.getId());
             phanBonObject.put("soluong", phanBon.getSoluong());
-            phanbonData.add(phanbonData);
+            phanbonData.add(phanBonObject);
         }
 
         JSONArray nongsanData = new JSONArray();
@@ -665,7 +665,7 @@ public class User {
             JSONObject nongSanObject = new JSONObject();
             nongSanObject.put("id", nongSan.getId());
             nongSanObject.put("soluong", nongSan.getSoluong());
-            nongsanData.add(nongsanData);
+            nongsanData.add(nongSanObject);
         }
 
         JSONArray nongsandacbietData = new JSONArray();
@@ -673,7 +673,7 @@ public class User {
             JSONObject nongsandacbietObject = new JSONObject();
             nongsandacbietObject.put("id", nongsandacbiet.getId());
             nongsandacbietObject.put("soluong", nongsandacbiet.getSoluong());
-            phanbonData.add(phanbonData);
+            nongsandacbietData.add(nongsandacbietObject);
         }
 
 
@@ -826,7 +826,7 @@ public class User {
                         int soluong = ((Long) obj.get("soluong")).intValue();
 
                         NongSanDacBiet nsdb = new NongSanDacBiet(id, soluong);
-                        NongSanDacBiet.add(nsdb);
+                        nongSandbs.add(nsdb);
                     }
                     this.session.user.NongSanDacBiet = nongSandbs;
 

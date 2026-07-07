@@ -357,10 +357,11 @@ public class FarmService extends Service {
 
     public void getInventory(Message ms) throws IOException {
         User us = session.user;
-        Vector<KeyValue<Integer, Integer>> nongsandacbiet = new Vector<>();
-        nongsandacbiet.add(new KeyValue(255, 20));//thit ca
-        nongsandacbiet.add(new KeyValue(215, 680));//khe
-        nongsandacbiet.add(new KeyValue(214, 4));//tinh dau huong duong
+        if (this.session.user.NongSanDacBiet.isEmpty()) {
+            this.session.user.NongSanDacBiet.add(new NongSanDacBiet(255, 20));
+            this.session.user.NongSanDacBiet.add(new NongSanDacBiet(215, 680));
+            this.session.user.NongSanDacBiet.add(new NongSanDacBiet(214, 4));
+        }
         ms = new Message(60);
         DataOutputStream ds = ms.writer();
         ds.writeByte(this.session.user.hatgiong.size());
@@ -385,10 +386,10 @@ public class FarmService extends Service {
             ds.writeShort(pb.getSoluong());
         }
         /// ///////
-        ds.writeByte(nongsandacbiet.size());
-        for (KeyValue<Integer, Integer> i : nongsandacbiet) {
-            ds.writeShort(i.getKey());
-            ds.writeShort(i.getValue());
+        ds.writeByte(this.session.user.NongSanDacBiet.size());
+        for (NongSanDacBiet i : this.session.user.NongSanDacBiet) {
+            ds.writeShort(i.getId());
+            ds.writeShort(i.getSoluong());
         }
         ds.writeByte(1);
         ds.writeInt(64000);
@@ -402,10 +403,10 @@ public class FarmService extends Service {
         }
 
         /// //////
-        ds.writeByte(nongsandacbiet.size());
-        for (KeyValue<Integer, Integer> i : nongsandacbiet) {
-            ds.writeShort(i.getKey());
-            ds.writeInt(i.getValue());
+        ds.writeByte(this.session.user.NongSanDacBiet.size());
+        for (NongSanDacBiet i : this.session.user.NongSanDacBiet) {
+            ds.writeShort(i.getId());
+            ds.writeInt(i.getSoluong());
         }
         ds.flush();
         this.session.sendMessage(ms);

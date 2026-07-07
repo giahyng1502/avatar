@@ -608,7 +608,7 @@ public class User {
         JSONArray landData = new JSONArray();
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-        for (LandItem landItem : this.session.user.landItems) {
+        for (LandItem landItem : this.landItems) {
             JSONObject landObject = new JSONObject();
             landObject.put("growthTime", landItem.getGrowthTime());
             landObject.put("type", landItem.getType());//lao
@@ -630,7 +630,7 @@ public class User {
 
 
         JSONArray animalData = new JSONArray();
-        for (Animal animal : this.session.user.Animal) {
+        for (Animal animal : this.Animal) {
             JSONObject animalObject = new JSONObject();
             animalObject.put("id", animal.getId());
             animalObject.put("health", animal.getHealth());
@@ -644,7 +644,7 @@ public class User {
         }
 
         JSONArray hatgiongData = new JSONArray();
-        for (HatGiong hatGiong : this.session.user.hatgiong) {
+        for (HatGiong hatGiong : this.hatgiong) {
             JSONObject hatGiongObject = new JSONObject();
             hatGiongObject.put("id", hatGiong.getId());
             hatGiongObject.put("soluong", hatGiong.getSoluong());
@@ -653,7 +653,7 @@ public class User {
 
 
         JSONArray phanbonData = new JSONArray();
-        for (PhanBon phanBon : this.session.user.PhanBon) {
+        for (PhanBon phanBon : this.PhanBon) {
             JSONObject phanBonObject = new JSONObject();
             phanBonObject.put("id", phanBon.getId());
             phanBonObject.put("soluong", phanBon.getSoluong());
@@ -661,7 +661,7 @@ public class User {
         }
 
         JSONArray nongsanData = new JSONArray();
-        for (NongSan nongSan : this.session.user.NongSan) {
+        for (NongSan nongSan : this.NongSan) {
             JSONObject nongSanObject = new JSONObject();
             nongSanObject.put("id", nongSan.getId());
             nongSanObject.put("soluong", nongSan.getSoluong());
@@ -669,7 +669,7 @@ public class User {
         }
 
         JSONArray nongsandacbietData = new JSONArray();
-        for (NongSanDacBiet nongsandacbiet : this.session.user.NongSanDacBiet) {
+        for (NongSanDacBiet nongsandacbiet : this.NongSanDacBiet) {
             JSONObject nongsandacbietObject = new JSONObject();
             nongsandacbietObject.put("id", nongsandacbiet.getId());
             nongsandacbietObject.put("soluong", nongsandacbiet.getSoluong());
@@ -749,7 +749,7 @@ public class User {
                         landItems.add(landItem);
                     }
                     // Cập nhật danh sách ô đất cho người chơi
-                    this.session.user.landItems = landItems;
+                    this.landItems = landItems;
 
                     // Phân tích dữ liệu vật nuôi (animal_data)
                     JSONArray animalData = (JSONArray) JSONValue.parse(animalDataString);
@@ -770,7 +770,7 @@ public class User {
                         animals.add(animalObj);
                     }
                     // Cập nhật danh sách vật nuôi cho người chơi
-                    this.session.user.Animal = animals;
+                    this.Animal = animals;
 
 
 
@@ -785,7 +785,7 @@ public class User {
                         HatGiong animalObj = new HatGiong(id, soluong);
                         hatgiongs.add(animalObj);
                     }
-                    this.session.user.hatgiong = hatgiongs;
+                    this.hatgiong = hatgiongs;
 
 
                     JSONArray phanbondata = (JSONArray) JSONValue.parse(phanbonDataString);
@@ -799,7 +799,7 @@ public class User {
                         PhanBon pb = new PhanBon(id, soluong);
                         phanBons.add(pb);
                     }
-                    this.session.user.PhanBon = phanBons;
+                    this.PhanBon = phanBons;
 
 
 
@@ -814,7 +814,7 @@ public class User {
                         NongSan ns = new NongSan(id, soluong);
                         nongSans.add(ns);
                     }
-                    this.session.user.NongSan = nongSans;
+                    this.NongSan = nongSans;
 
 
                     JSONArray nongsandbdata = (JSONArray) JSONValue.parse(nongsandacbietDataString);
@@ -828,7 +828,7 @@ public class User {
                         NongSanDacBiet nsdb = new NongSanDacBiet(id, soluong);
                         nongSandbs.add(nsdb);
                     }
-                    this.session.user.NongSanDacBiet = nongSandbs;
+                    this.NongSanDacBiet = nongSandbs;
 
 
                 }
@@ -836,35 +836,35 @@ public class User {
         }
 
         // Nếu không có dữ liệu, tạo mặc định cho người chơi
-        if (this.session.user.landItems.isEmpty()) {
+        if (this.landItems.isEmpty()) {
             // Tạo mặc định cho 6 ô đất
             List<LandItem> defaultLandItems = new ArrayList<>();
             for (int i = 0; i < 6; i++) {
                 defaultLandItems.add(new LandItem(0, -1,-1, 0, false, false, false, LocalDateTime.now())); // Cây mặc định
             }
-            this.session.user.landItems = defaultLandItems;
+            this.landItems = defaultLandItems;
         }
 
-        if (this.session.user.Animal.isEmpty()) {
+        if (this.Animal.isEmpty()) {
             // Không có vật nuôi, nên không cần thêm gì
-            this.session.user.Animal = new ArrayList<>();
+            this.Animal = new ArrayList<>();
         }
 
-        if (this.session.user.hatgiong.isEmpty()) {
+        if (this.hatgiong.isEmpty()) {
             // Không có vật nuôi, nên không cần thêm gì
-            this.session.user.hatgiong = new ArrayList<>();
+            this.hatgiong = new ArrayList<>();
         }
-        if (this.session.user.PhanBon.isEmpty()) {
+        if (this.PhanBon.isEmpty()) {
             // Không có vật nuôi, nên không cần thêm gì
-            this.session.user.PhanBon = new ArrayList<>();
+            this.PhanBon = new ArrayList<>();
         }
-        if (this.session.user.NongSan.isEmpty()) {
+        if (this.NongSan.isEmpty()) {
             // Không có vật nuôi, nên không cần thêm gì
-            this.session.user.NongSan = new ArrayList<>();
+            this.NongSan = new ArrayList<>();
         }
-        if (this.session.user.NongSanDacBiet.isEmpty()) {
+        if (this.NongSanDacBiet.isEmpty()) {
             // Không có vật nuôi, nên không cần thêm gì
-            this.session.user.NongSanDacBiet = new ArrayList<>();
+            this.NongSanDacBiet = new ArrayList<>();
         }
 
     }

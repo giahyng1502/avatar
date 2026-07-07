@@ -79,7 +79,7 @@ public class TaiXiu {
         gameId++;
 
         saveGameRoundResult(gameId, "Pending");
-        System.out.println("Bắt đầu phiên mới với ID: " + gameId);
+         // System.out.println("Bắt đầu phiên mới với ID: " + gameId);
         startCountdown();
     }
 
@@ -91,7 +91,7 @@ public class TaiXiu {
         long preStart = System.currentTimeMillis();
         int preCountdown = RESULT_DISPLAY_DURATION_SECONDS;
         if (bets == null || bets.isEmpty()) {
-            System.out.println("Không có cược nào cho phiên " + gameId);
+             // System.out.println("Không có cược nào cho phiên " + gameId);
         }else {
             for (Bet bet : bets) {
                 User user = bet.getUser();
@@ -151,7 +151,7 @@ public class TaiXiu {
         //clearBetsForGame(gameId); // Xóa cược cho ván hiện tại
         updateGameRewardStatus(gameId); // Cập nhật trạng thái trả thưởng
 
-        System.out.println("Kết quả phiên " + gameId + ": " + result);
+         // System.out.println("Kết quả phiên " + gameId + ": " + result);
     }
 
     // Tính kết quả ngẫu nhiên cho phiên cược
@@ -162,7 +162,7 @@ public class TaiXiu {
         int dice3 = random.nextInt(6) + 1;
         int total = dice1 + dice2 + dice3;
         endGame("khóa");
-        System.out.println("khóa cuoc");
+         // System.out.println("khóa cuoc");
         String result = (total >= 11 && total <= 18) ? "Tài" : "Xỉu";
         return " " + dice1 + ", " + dice2 + ", " + dice3 + " " + total + " " + result;
     }
@@ -359,7 +359,7 @@ public class TaiXiu {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("đã trả thưởng");
+         // System.out.println("đã trả thưởng");
     }
 
     // Kiểm tra trạng thái phiên
@@ -381,7 +381,7 @@ public class TaiXiu {
     public void endGame(String result) {
         // Cập nhật trạng thái trò chơi và thời gian kết thúc
         updateGameEndStatus(gameId, result);
-        System.out.println("Kết thúc phiên với ID: " + gameId + " với kết quả: " + result);
+         // System.out.println("Kết thúc phiên với ID: " + gameId + " với kết quả: " + result);
 
     }
 
@@ -396,7 +396,7 @@ public class TaiXiu {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("endGame không cho cược game ID "+ gameId);
+         // System.out.println("endGame không cho cược game ID "+ gameId);
     }
 
 

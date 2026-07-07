@@ -492,4 +492,70 @@ public class FarmService extends Service {
         ds.flush();
         this.session.sendMessage(ms);
     }
+
+    public void usingItem(User user, Message mss) throws IOException {
+        int idUser = mss.reader().readInt();
+        byte indexCell = mss.reader().readByte();
+        short idItem = mss.reader().readShort();
+        
+        System.out.println("User " + user.getId() + " using item " + idItem + " on farm " + idUser + " cell " + indexCell);
+        
+        // Is it water?
+        if (idItem == 100) {
+            if (indexCell >= 0 && indexCell < user.landItems.size()) {
+                avatar.Farm.LandItem cell = user.landItems.get(indexCell);
+                if (cell.getType() != -1 && !cell.isWatered()) {
+                    cell.setWatered(true);
+                    cell.setSucKhoe((byte) Math.min(100, cell.getSucKhoe() + 10));
+                    this.serverDialog("Bạn đã tưới nước thành công!");
+                } else {
+                    this.serverDialog("Không thể tưới nước lúc này!");
+                }
+            }
+            return;
+        }
+
+        // Deduct item from inventory (PhanBon)
+        boolean hasItem = false;
+        avatar.Farm.PhanBon itemToUse = null;
+        for (avatar.Farm.PhanBon pb : user.PhanBon) {
+            if (pb.getId() == idItem && pb.getSoluong() > 0) {
+                itemToUse = pb;
+                hasItem = true;
+                break;
+            }
+        }
+        
+        if (!hasItem) {
+            this.serverDialog("Kho của bạn đã hết vật phẩm này!");
+            return;
+        }
+        
+        // Deduct 1
+        itemToUse.setSoluong(itemToUse.getSoluong() - 1);
+        if (itemToUse.getSoluong() <= 0) {
+            user.PhanBon.remove(itemToUse);
+        }
+        
+        // Apply effect
+        if (indexCell >= 0 && indexCell < user.landItems.size()) {
+            avatar.Farm.LandItem cell = user.landItems.get(indexCell);
+            if (cell.getType() != -1 && !cell.isFertilized()) {
+                cell.setFertilized(true);
+                cell.setGrowthTime(Math.max(0, cell.getGrowthTime() - 60)); // Reduce by 60 mins
+                this.serverDialog("Bạn đã bón phân thành công!");
+            } else {
+                this.serverDialog("Thao tác thành công!");
+            }
+        }
+    }
+
+    public void doSteal(User user, Message mss) throws IOException {
+        byte step = mss.reader().readByte();
+        if (step == 0) {
+            this.serverDialog("Bạn phát hiện một số nông sản có thể ăn trộm!");
+        } else if (step == 1) {
+            this.serverDialog("Bạn đã ăn trộm thành công một ít nông sản!");
+        }
+    }
 }

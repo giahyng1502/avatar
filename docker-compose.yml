@@ -12,8 +12,6 @@ services:
       - db_data:/var/lib/mysql
       # Tự động nạp dữ liệu từ file sql vào database trong lần khởi chạy đầu tiên
       - ./database/avatar_2x.sql:/docker-entrypoint-initdb.d/avatar_2x.sql
-    ports:
-      - "3306:3306"
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
   server:

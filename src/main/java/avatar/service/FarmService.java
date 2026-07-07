@@ -357,11 +357,6 @@ public class FarmService extends Service {
 
     public void getInventory(Message ms) throws IOException {
         User us = session.user;
-        if (this.session.user.NongSanDacBiet.isEmpty()) {
-            this.session.user.NongSanDacBiet.add(new NongSanDacBiet(255, 20));
-            this.session.user.NongSanDacBiet.add(new NongSanDacBiet(215, 680));
-            this.session.user.NongSanDacBiet.add(new NongSanDacBiet(214, 4));
-        }
         ms = new Message(60);
         DataOutputStream ds = ms.writer();
         ds.writeByte(this.session.user.hatgiong.size());

@@ -67,7 +67,20 @@ public class FarmMsgHandler extends MessageHandler {
                     break;
                 }
                 case Cmd.GET_IMG_FARM: {
-                    this.service.getImgFarm(mss);
+                    try {
+                        byte[] data = new byte[mss.reader().available()];
+                        mss.reader().readFully(data);
+                        StringBuilder sb = new StringBuilder();
+                        for (byte b : data) {
+                            sb.append(String.format("%02X ", b));
+                        }
+                        System.out.println("====== PACKET 82 RAW DATA ======");
+                        System.out.println(sb.toString());
+                        System.out.println("================================");
+                        this.client.user.getAvatarService().serverDialog("Đã nhận packet 82, xem log VPS!");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
                 }
                 case Cmd.REQUEST_SLOT: {

@@ -1336,11 +1336,17 @@ public class User {
     }
 
     public void close() throws IOException {
+        int sessionId = 0;
+        if (this.session != null) {
+            sessionId = this.session.id;
+            this.session.user = null;
+            this.session = null;
+        }
         if (zone != null) {
             zone.leave(this);
         }
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        DbManager.getInstance().executeUpdate("UPDATE `players` SET `is_online` = ?, `client_id` = ?, `last_online` = ? WHERE `user_id` = ? LIMIT 1;", 0, session.id, timestamp, this.id);
+        DbManager.getInstance().executeUpdate("UPDATE `players` SET `is_online` = ?, `client_id` = ?, `last_online` = ? WHERE `user_id` = ? LIMIT 1;", 0, sessionId, timestamp, this.id);
         if (isLoadDataFinish()) {
             saveData();
         }
